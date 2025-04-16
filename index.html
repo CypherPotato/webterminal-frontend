@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>WebTerminal</title>
-    <link rel="stylesheet" href="/assets/terminal.css">
+    <link rel="stylesheet" href="/assets/terminal.css?nocache=2">
 
     <script src="/assets/el.min.js"></script>
     <script src="/assets/terminal.js"></script>
@@ -31,19 +31,31 @@
     <script>
         var ws;
         var term = terminal(document.querySelector("#terminalWrapper"));
+        var wsPingInterval;
 
         const TYPE_STD_MESSAGE = "stdtext";
         const TYPE_STD_READFROM = "stdreadfrom";
         const TYPE_STD_CLEAR = "stdclear";
-        
+
         function connectWs() {
-            term.appendText("Connecting to " + new URL(document.querySelector("#uri").value).origin + "\n", "procedural");
+            clearInterval(wsPingInterval);
+            term.appendText({
+                text: "Connecting to " + new URL(document.querySelector("#uri").value).origin + "\n",
+                type: "procedural"
+            });
             ws = new WebSocket(document.querySelector("#uri").value, 'webterminal');
             ws.onmessage = function (event) {
+
+                if (event.data.startsWith('.'))
+                    return;
+
                 const message = JSON.parse(event.data);
                 switch (message.type) {
                     case TYPE_STD_MESSAGE:
-                        term.appendText(message.data);
+                        term.appendText({
+                            text: message.data.text,
+                            itemStyle: message.data.style,
+                        });
                         break;
                     case TYPE_STD_READFROM:
                         term.beginRead();
@@ -54,10 +66,19 @@
                 }
             };
             ws.onopen = function () {
-                term.appendText("Connected!\n", "procedural");
+                term.appendText({
+                    text: "Connected.\n",
+                    type: "procedural"
+                });
+                wsPingInterval = setInterval(() => {
+                    ws.send(".terminal-hello");
+                }, 5000);
             };
             ws.onclose = function () {
-                term.appendText("Connection closed.\n", "procedural");
+                term.appendText({
+                    text: "\nConnection closed.",
+                    type: "procedural"
+                });
             };
         }
 

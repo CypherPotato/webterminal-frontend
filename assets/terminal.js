@@ -14,9 +14,31 @@ const terminal = function (wrapperElement) {
         currentInput?.focus();
     }
 
-    function _appendText(text, type) {
+    function resolveSafeColor(safeColor) {
+        if (safeColor.startsWith('$')) {
+            return `var(--safe-${safeColor.replace('$', '')})`;
+        }
+        return safeColor;
+    }
+
+    function _appendText({ text, type, itemStyle }) {
+
+        const styles = {};
+        if (itemStyle) {
+            if (itemStyle.foregroundColor)
+                styles.color = resolveSafeColor(itemStyle.foregroundColor);
+            if (itemStyle.backgroundColor)
+                styles.backgroundColor = resolveSafeColor(itemStyle.backgroundColor);
+            if (itemStyle.bold)
+                styles.fontWeight = "bold";
+            if (itemStyle.italic)
+                styles.fontStyle = "italic";
+            if (itemStyle.link)
+                styles.textDecoration = "underline";
+        }
+
         terminalComponent.appendChild(
-            el("span.terminal-text", text, { classList: [type] }));
+            el("span.terminal-text", text, { classList: [type], style: styles }));
     }
 
     function _beginRead() {
@@ -65,8 +87,8 @@ const terminal = function (wrapperElement) {
     });
 
     return {
-        appendText(text, type) {
-            _appendText(text, type);
+        appendText(data) {
+            _appendText(data);
         },
         beginRead() {
             _beginRead();
