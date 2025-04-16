@@ -1,0 +1,163 @@
+.terminal {
+    font-family: var(--terminal-font-family);
+    font-size: var(--terminal-font-size);
+    line-height: var(--terminal-line-height);
+    white-space: pre;
+    padding: 1em;
+}
+
+.terminal .terminal-text {
+    color: var(--fr-color-200);
+}
+
+.terminal .terminal-text.procedural {
+    color: var(--fr-color-300);
+    font-style: italic;
+}
+
+.terminal .terminal-text.user-input {
+    color: var(--fr-color-100);
+}
+
+.terminal .terminal-read-input {
+    display: inline-block;
+    min-width: 150px;
+    writing-mode: horizontal-tb;
+    background-color: transparent;
+    outline: none;
+    vertical-align: top;
+    cursor: text;
+}
+
+.terminal .terminal-read-input:hover {
+    outline: 1px solid var(--bg-color-300);
+}
+#menubar {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    background-color: var(--bg-color-200);
+    border: 1px solid var(--bg-color-300);
+    border-radius: 4px;
+    color: var(--fr-color-200);
+    font-family: var(--ui-font-family);
+    font-size: var(--ui-font-size);
+}
+
+#menubar section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+
+#menubar section label {
+    font-weight: 500;
+    font-size: .9em;
+}
+
+#menubar section input {
+    font-family: inherit;
+    font-size: inherit;
+    background-color: var(--bg-color-100);
+    padding: 4px 10px;
+    border: 1px solid var(--bg-color-300);
+    border-radius: 4px;
+    min-width: 400px;
+    color: var(--fr-color-200);
+}
+
+#menubar section input:hover {
+    background-color: var(--bg-color-200);
+    outline: 1px solid #1e8fff50;
+}
+
+#menubar section input:focus {
+    color: var(--fr-color-100);
+    background-color: var(--contrast);
+    outline: 3px solid #1e8fff50;
+}
+
+#menubar section button {
+    font-family: inherit;
+    font-size: inherit;
+    color: var(--fr-color-200);
+    background-color: var(--bg-color-100);
+    padding: 4px 10px;
+    border: 1px solid var(--bg-color-300);
+    border-radius: 4px;
+    box-shadow: inset 0 -1px 6px 0px var(--bg-color-300);
+    cursor: pointer;
+}
+
+#menubar section button:hover {
+    background-color: var(--bg-color-200);
+    color: var(--fr-color-100);
+    box-shadow: inset 0 -1px 12px 0px #1e8fff50;
+    outline: 1px solid #1e8fff50;
+}
+
+#menubar section button:active {
+    background-color: var(--contrast);
+}
+
+#menubar section + section {
+    margin-left: 20px;
+}
+:root {
+    --ui-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --ui-font-size: 13px;
+    --terminal-font-family: 'Consolas', Courier, monospace;
+    --terminal-font-size: 13px;
+    --terminal-line-height: 1.4;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background-color: var(--bg-color-100);
+    color: var(--fr-color-100);
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --contrast: black;
+        --bg-color-100: #1e1e1e;
+        --bg-color-200: #2a2a2a;
+        --bg-color-300: #5f5f5f;
+        --fr-color-100: #f5f5f5;
+        --fr-color-200: #c4c4c4;
+        --fr-color-300: #808080;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --contrast: white;
+        --bg-color-100: #fefefe;
+        --bg-color-200: #e7e7e7;
+        --bg-color-300: #bbb;
+        --fr-color-100: #1e1e1e;
+        --fr-color-200: #2a2a2a;
+        --fr-color-300: #5f5f5f;
+    }
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>WebTerminal</title>
+    <link rel="stylesheet" href="/assets/terminal.css">
+
+    <script src="/assets/el.min.js"></script>
+    <script src="/assets/terminal.js"></script>
+</head>
+
+<body>
+    <div id="menubar">
+        <section>
+            <label>
+                WebTerminal address:
+            </label>
+            <input id="uri" type="text" value="">
+        </section>
+        <section>
+            <button onclick="connectWs()">
+                Connect
+            </button>
+        </section>
+    </div>
+    <div id="terminalWrapper" style="padding-top: 40px">
+    </div>
+    <script>
+        var ws;
+        var term = terminal(document.querySelector("#terminalWrapper"));
+
+        const TYPE_STD_MESSAGE = "stdtext";
+        const TYPE_STD_READFROM = "stdreadfrom";
+        const TYPE_STD_CLEAR = "stdclear";
+        
+        function connectWs() {
+            term.appendText("Connecting to " + new URL(document.querySelector("#uri").value).origin + "\n", "procedural");
+            ws = new WebSocket(document.querySelector("#uri").value, 'webterminal');
+            ws.onmessage = function (event) {
+                const message = JSON.parse(event.data);
+                switch (message.type) {
+                    case TYPE_STD_MESSAGE:
+                        term.appendText(message.data);
+                        break;
+                    case TYPE_STD_READFROM:
+                        term.beginRead();
+                        break;
+                    case TYPE_STD_CLEAR:
+                        term.clear();
+                        break;
+                }
+            };
+            ws.onopen = function () {
+                term.appendText("Connected!\n", "procedural");
+            };
+            ws.onclose = function () {
+                term.appendText("Connection closed.\n", "procedural");
+            };
+        }
+
+        term.onRead(text => {
+            ws.send(text);
+        });
+
+        const query = new URLSearchParams(window.location.search)
+        if (query.get('q') != null) {
+            document.querySelector("#uri").value = query.get('q');
+            connectWs();
+        }
+        if (query.has('no-controls')) {
+            document.querySelector("#menubar").style.display = "none";
+            document.querySelector("#terminalWrapper").style.paddingTop = "0";
+        }
+    </script>
+</body>
+
+</html>
