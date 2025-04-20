@@ -9,11 +9,7 @@ const terminal = function (wrapperElement) {
     var inputHistoryArrowIndex = 0;
     const inputHistory = [];
     const readEventListeners = [];
-
-    function focusInput() {
-        currentInput?.focus();
-    }
-
+    
     function resolveSafeColor(safeColor) {
         if (safeColor.startsWith('$')) {
             return `var(--safe-${safeColor.replace('$', '')})`;
@@ -76,16 +72,12 @@ const terminal = function (wrapperElement) {
         input.focus();
         currentInput = input;
     }
-
+    
     function _endRead() {
         terminalComponent.querySelector(".terminal-read-input")?.remove();
         currentInput = null;
     }
-
-    terminalComponent.addEventListener("dblclick", event => {
-        focusInput();
-    });
-
+    
     return {
         appendText(data) {
             _appendText(data);

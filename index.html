@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    
     <title>WebTerminal</title>
-    <link rel="stylesheet" href="/assets/terminal.css?nocache=2">
+    <link rel="stylesheet" href="/assets/terminal.css?nocache=3">
 
     <script src="/assets/el.min.js"></script>
-    <script src="/assets/terminal.js"></script>
+    <script src="/assets/terminal.js?nocache=3"></script>
 </head>
 
 <body>
@@ -36,7 +36,7 @@
         const TYPE_STD_MESSAGE = "stdtext";
         const TYPE_STD_READFROM = "stdreadfrom";
         const TYPE_STD_CLEAR = "stdclear";
-
+        
         function connectWs() {
             clearInterval(wsPingInterval);
             term.appendText({
@@ -64,6 +64,13 @@
                         term.clear();
                         break;
                 }
+            };
+            ws.onerror = function (event) {
+                console.log(event);
+                term.appendText({
+                    text: "Connection error.\n",
+                    type: "procedural"
+                });
             };
             ws.onopen = function () {
                 term.appendText({
